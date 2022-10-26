@@ -1,64 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_riverpod/ui/screen/home_screen.dart';
 
-final valueProvider = StateProvider<int>((ref) {
-  return 28;
+final navProvider = StateProvider<int>((ref) {
+  return 0;
 });
 
 class HomePage extends ConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var value = ref.watch(valueProvider);
-    ref.listen(valueProvider, ((previous, next) {
-      if (next == 40) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Value is 70'),
-        ));
-        ref.watch(valueProvider.notifier).state = 30;
-      }
-    }));
+    final navValue = ref.watch(navProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('HomePage'),
+        title: const Text('HomePage'),
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Text(value.toString()),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                ref.read(valueProvider.notifier).state++;
-              },
-              child: Text('Increment')),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                ref.invalidate(valueProvider);
-              },
-              child: Text('invalidate value')),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                context.go('/about');
-              },
-              child: Text('Go About Page')),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                context.go('/user');
-              },
-              child: Text('User'))
-        ],
+      body: IndexedStack(
+        index: navValue,
+        children: const [HomeScreen(), Text('Search Screen'), Text('Profile')],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+                backgroundColor: Colors.green),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: 'Search',
+                backgroundColor: Colors.yellow),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+              backgroundColor: Colors.blue,
+            ),
+          ],
+          type: BottomNavigationBarType.fixed,
+          currentIndex: navValue,
+          selectedItemColor: Colors.black,
+          iconSize: 40,
+          onTap: (value) => ref.watch(navProvider.state).state = value,
+          elevation: 5),
     );
   }
 }
