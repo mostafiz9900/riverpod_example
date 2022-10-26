@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_riverpod/providers/about_provider.dart';
 
-final aboutProvider = Provider<AboutProvider>((ref) {
+final aboutProvider = Provider.autoDispose<AboutProvider>((ref) {
   return AboutProvider();
 });
 
