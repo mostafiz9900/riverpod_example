@@ -23,11 +23,11 @@ class AboutPage extends ConsumerWidget {
     ];
     return Scaffold(
       appBar: AppBar(
-        title: Text('AboutPage'),
+        title: const Text('AboutPage'),
       ),
       body: Column(
         children: [
-          Center(
+          const Center(
             child: Text('AboutPage'),
           ),
           DropdownButton(

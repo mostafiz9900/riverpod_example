@@ -3,10 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_riverpod/ui/about_page.dart';
+import 'package:todo_riverpod/ui/change_notify_page.dart';
+import 'package:todo_riverpod/ui/future_provider_page.dart';
 import 'package:todo_riverpod/ui/home_page.dart';
+import 'package:todo_riverpod/ui/provider_state_page.dart';
+import 'package:todo_riverpod/ui/provider_page.dart';
+import 'package:todo_riverpod/ui/state_notify_page.dart';
+import 'package:todo_riverpod/ui/streme_provider_page.dart';
 import 'package:todo_riverpod/ui/user_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // set the publishable key for Stripe - this is mandatory
   runApp(const MyApp());
 }
 
@@ -51,6 +60,42 @@ final GoRouter _router = GoRouter(
       path: '/user',
       builder: (BuildContext context, GoRouterState state) {
         return const UserPage();
+      },
+    ),
+    GoRoute(
+      path: '/providerPage',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ProviderPage();
+      },
+    ),
+    GoRoute(
+      path: '/providerStatePage',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ProviderStatePage();
+      },
+    ),
+    GoRoute(
+      path: '/futureProviderPage',
+      builder: (BuildContext context, GoRouterState state) {
+        return const FutureProviderPage();
+      },
+    ),
+    GoRoute(
+      path: '/stremeProviderPage',
+      builder: (BuildContext context, GoRouterState state) {
+        return const StremeProviderPage();
+      },
+    ),
+    GoRoute(
+      path: '/stateNotifyPage',
+      builder: (BuildContext context, GoRouterState state) {
+        return const StateNotifyPage();
+      },
+    ),
+    GoRoute(
+      path: '/changeNotifyPage',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ChangeNotifyPage();
       },
     ),
   ],

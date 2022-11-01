@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
               onPressed: () {
                 ref.read(valueProvider.notifier).state++;
               },
-              child: Text('Increment')),
+              child: const Text('Increment')),
           const SizedBox(
             height: 20,
           ),
@@ -52,7 +52,7 @@ class HomeScreen extends ConsumerWidget {
               onPressed: () {
                 ref.invalidate(valueProvider);
               },
-              child: Text('invalidate value')),
+              child: const Text('invalidate value')),
           const SizedBox(
             height: 20,
           ),
@@ -60,7 +60,7 @@ class HomeScreen extends ConsumerWidget {
               onPressed: () {
                 context.go('/about');
               },
-              child: Text('Go About Page')),
+              child: const Text('Go About Page')),
           const SizedBox(
             height: 20,
           ),
@@ -68,31 +68,87 @@ class HomeScreen extends ConsumerWidget {
               onPressed: () {
                 context.go('/user');
               },
-              child: Text('User')),
-          DropdownButton(
-            isExpanded: true,
-            // Initial Value
-            value: dropDownValue == '0' ? null : dropDownValue,
-
-            // Down Arrow Icon
-            icon: const Icon(Icons.keyboard_arrow_down),
-            hint: Text('Select Item'),
-
-            // Array list of items
-            items: items.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                child: Text(items),
-              );
-            }).toList(),
-            // After selecting the desired option,it will
-            // change button value to selected value
-            onChanged: (String? newValue) {
-              ref.watch(selectDropdownProvider.state).state = newValue!;
-            },
+              child: const Text('User')),
+          const SizedBox(
+            height: 20,
           ),
+          ElevatedButton(
+              onPressed: () {
+                context.go('/providerPage');
+              },
+              child: const Text('Provider')),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                context.go('/providerStatePage');
+              },
+              child: const Text('Provider State')),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                context.go('/futureProviderPage');
+              },
+              child: const Text('Future Provider State')),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                context.go('/stremeProviderPage');
+              },
+              child: const Text('Streme Provider State')),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                context.go('/stateNotifyPage');
+              },
+              child: const Text('State Notify Page')),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                context.go('/changeNotifyPage');
+              },
+              child: const Text('Change Notify Page')),
+          const SizedBox(
+            height: 20,
+          ),
+          dropdownList(dropDownValue, items, ref),
         ],
       ),
+    );
+  }
+
+  DropdownButton<String> dropdownList(
+      String dropDownValue, List<String> items, WidgetRef ref) {
+    return DropdownButton(
+      isExpanded: true,
+      // Initial Value
+      value: dropDownValue == '0' ? null : dropDownValue,
+
+      // Down Arrow Icon
+      icon: const Icon(Icons.keyboard_arrow_down),
+      hint: const Text('Select Item'),
+
+      // Array list of items
+      items: items.map((String items) {
+        return DropdownMenuItem(
+          value: items,
+          child: Text(items),
+        );
+      }).toList(),
+      // After selecting the desired option,it will
+      // change button value to selected value
+      onChanged: (String? newValue) {
+        ref.watch(selectDropdownProvider.state).state = newValue!;
+      },
     );
   }
 }

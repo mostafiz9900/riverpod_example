@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:todo_riverpod/ui/screen/home_screen.dart';
 
 final navProvider = StateProvider<int>((ref) {
@@ -19,7 +18,7 @@ class HomePage extends ConsumerWidget {
       ),
       body: IndexedStack(
         index: navValue,
-        children: const [HomeScreen(), Text('Search Screen'), Text('Profile')],
+        children: const [HomeScreen(), Text('Services'), Text('Profile')],
       ),
       bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -29,7 +28,7 @@ class HomePage extends ConsumerWidget {
                 backgroundColor: Colors.green),
             BottomNavigationBarItem(
                 icon: Icon(Icons.search),
-                label: 'Search',
+                label: 'Payment',
                 backgroundColor: Colors.yellow),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
