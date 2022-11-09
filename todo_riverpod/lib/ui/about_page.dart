@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_riverpod/providers/about_provider.dart';
+import 'package:todo_riverpod/providers/info_provider.dart';
 
 final aboutProvider = Provider.autoDispose<AboutProvider>((ref) {
   return AboutProvider();
+});
+
+final dropdownProvider = StateProvider<String>((ref) {
+  return '0';
 });
 
 class AboutPage extends ConsumerWidget {
   const AboutPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final aboutValu = ref.read(aboutProvider);
+    final aboutValu = ref.watch(aboutProvider);
     final value = ref.watch(aboutValu.valueProvider);
     final genderValue = ref.watch(aboutValu.genderProvider);
     final conditionValue = ref.watch(aboutValu.conditionProvider);
@@ -25,81 +30,153 @@ class AboutPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('AboutPage'),
       ),
-      body: Column(
-        children: [
-          const Center(
-            child: Text('AboutPage'),
-          ),
-          DropdownButton(
-            isExpanded: true,
-            // Initial Value
-            value: value,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Center(
+              child: Text('AboutPage'),
+            ),
+            DropdownButton(
+              isExpanded: true,
+              // Initial Value
+              value: value,
 
-            // Down Arrow Icon
-            icon: const Icon(Icons.keyboard_arrow_down),
+              // Down Arrow Icon
+              icon: const Icon(Icons.keyboard_arrow_down),
 
-            // Array list of items
-            items: items.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                child: Text(items),
-              );
-            }).toList(),
-            // After selecting the desired option,it will
-            // change button value to selected value
-            onChanged: (newValue) {
-              ref.read(aboutValu.valueProvider.notifier).state = newValue!;
-              print(newValue);
-              // setState(() {
-              //   dropdownvalue = newValue!;
-              // });
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          ListTile(
-            title: const Text('Mail'),
-            leading: Radio(
-              value: "mail",
-              groupValue: genderValue,
-              onChanged: (value) {
-                ref.watch(aboutValu.genderProvider.notifier).state = value!;
+              // Array list of items
+              items: items.map((String items) {
+                return DropdownMenuItem(
+                  value: items,
+                  child: Text(items),
+                );
+              }).toList(),
+
+              onChanged: (newValue) {
+                ref.read(aboutValu.valueProvider.notifier).state = newValue!;
+                print(newValue);
               },
             ),
-          ),
-          ListTile(
-            title: const Text('Femail'),
-            leading: Radio(
-              value: 'femail',
-              groupValue: genderValue,
-              onChanged: (value) {
-                ref.watch(aboutValu.genderProvider.notifier).state = value!;
-              },
+            const SizedBox(
+              height: 20,
             ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 10,
-              ), //SizedBox
-              Text(
-                'Library Implementation Of Searching Algorithm: ',
-                style: TextStyle(fontSize: 17.0),
-              ), //Text
-              SizedBox(width: 10), //SizedBox
-              /** Checkbox Widget **/
-              Checkbox(
-                value: conditionValue,
+            Text('${value.toString()}'),
+            ListTile(
+              title: const Text('Mail'),
+              leading: Radio(
+                value: "mail",
+                groupValue: genderValue,
                 onChanged: (value) {
-                  ref.read(aboutValu.conditionProvider.notifier).state = value!;
+                  ref.watch(aboutValu.genderProvider.notifier).state = value!;
                 },
-              ), //Checkbox
-            ], //<Widget>[]
-          ),
-        ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Femail'),
+              leading: Radio(
+                value: 'femail',
+                groupValue: genderValue,
+                onChanged: (value) {
+                  ref.watch(aboutValu.genderProvider.notifier).state = value!;
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                const SizedBox(
+                  width: 10,
+                ), //SizedBox
+                const Text(
+                  'Library Implementation Of Searching Algorithm: ',
+                  style: TextStyle(fontSize: 17.0),
+                ), //Text
+                const SizedBox(width: 10), //SizedBox
+                /** Checkbox Widget **/
+                Checkbox(
+                  value: conditionValue,
+                  onChanged: (value) {
+                    ref.read(aboutValu.conditionProvider.notifier).state =
+                        value!;
+                  },
+                ),
+              ], //<Widget>[]
+            ),
+            const InfoDetails(),
+            const SizedBox(
+              height: 10,
+            ),
+            Text('${ref.watch(dropdownProvider)}'),
+            const CustomDropdownList(),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class InfoDetails extends ConsumerStatefulWidget {
+  const InfoDetails({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _InfoDetailsState();
+}
+
+class _InfoDetailsState extends ConsumerState<InfoDetails> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(infoProvider('451'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final counter = ref.watch(infoProvider('451'));
+    // print(counter.value!.length);
+    // print('object');
+    return counter.value == null
+        ? const Text('data')
+        : Container(
+            child: Text(counter.value!.elementAt(0).email.toString()),
+          );
+  }
+}
+
+class CustomDropdownList extends ConsumerWidget {
+  const CustomDropdownList({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final value = ref.watch(dropdownProvider);
+    final valueList = ref.watch(infoProvider('25'));
+    ref.listen(
+      dropdownProvider,
+      (previous, next) {
+        print(next);
+        print(previous);
+      },
+    );
+    return DropdownButton(
+      isExpanded: true,
+      // Initial Value
+      value: value == '0' ? null : value,
+
+      // Down Arrow Icon
+      icon: const Icon(Icons.keyboard_arrow_down),
+
+      // Array list of items
+      items: valueList.value?.map((items) {
+        return DropdownMenuItem(
+          value: items.email,
+          child: Text(items.name!),
+        );
+      }).toList(),
+
+      onChanged: (newValue) {
+        ref.read(dropdownProvider.notifier).state = newValue!;
+        ref.read(UiController.pr).someFunction();
+        // print(newValue);
+      },
     );
   }
 }
