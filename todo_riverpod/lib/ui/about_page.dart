@@ -10,6 +10,9 @@ final aboutProvider = Provider.autoDispose<AboutProvider>((ref) {
 final dropdownProvider = StateProvider<String>((ref) {
   return '0';
 });
+final aboutControlerProvider = Provider<AboutController>((ref) {
+  return AboutController();
+});
 
 class AboutPage extends ConsumerWidget {
   const AboutPage({Key? key}) : super(key: key);
@@ -149,6 +152,7 @@ class CustomDropdownList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final value = ref.watch(dropdownProvider);
     final valueList = ref.watch(infoProvider('25'));
+    final aboutCon = ref.watch(aboutControlerProvider);
     ref.listen(
       dropdownProvider,
       (previous, next) {
@@ -175,8 +179,23 @@ class CustomDropdownList extends ConsumerWidget {
       onChanged: (newValue) {
         ref.read(dropdownProvider.notifier).state = newValue!;
         ref.read(UiController.pr).someFunction();
+        aboutCon.initFun(ref);
         // print(newValue);
       },
     );
+  }
+}
+
+class AboutController {
+  void initFun(WidgetRef ref) {
+    final aboutValu = ref.watch(aboutProvider);
+    final value = ref.read(dropdownProvider);
+    final drop2 = ref.read(aboutValu.valueProvider);
+    final drop3 = ref.read(aboutValu.genderProvider);
+    print('ekhae ase');
+    print(value);
+    print(drop2);
+    print(drop3);
+    print('ekhae ase');
   }
 }

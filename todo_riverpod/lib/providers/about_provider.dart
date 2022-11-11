@@ -39,8 +39,10 @@ class MyStateNotifier extends StateNotifier<InfoModel> {
   final Ref ref;
 
   MyStateNotifier(super.state, this.ref);
+  var varLis = ProviderContainer();
 
   void doSomething() {
     final value = ref.read(dropdownProvider);
+    varLis.read(dropdownProvider);
   }
 }
