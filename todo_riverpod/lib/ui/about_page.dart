@@ -4,6 +4,9 @@ import 'package:todo_riverpod/model/info.dart';
 import 'package:todo_riverpod/providers/about_provider.dart';
 import 'package:todo_riverpod/providers/info_provider.dart';
 
+final isLoaderProvider = StateProvider.autoDispose<bool>((ref) {
+  return true;
+});
 final aboutProvider = Provider.autoDispose<AboutProvider>((ref) {
   return AboutProvider();
 });
@@ -20,106 +23,123 @@ class AboutPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final aboutValu = ref.watch(aboutProvider);
+    print('object1');
     final value = ref.watch(aboutValu.valueProvider);
+    print('object 2');
     final genderValue = ref.watch(aboutValu.genderProvider);
+    print('object3');
     final conditionValue = ref.watch(aboutValu.conditionProvider);
     final infoData = ref.watch(infoProvider('55'));
+    print('object4');
+    final isload = ref.watch(isLoaderProvider);
+    print('object5');
+    Future.delayed(
+      Duration(seconds: 2),
+      () {
+        ref.read(isLoaderProvider.notifier).state = false;
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('AboutPage'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Center(
-              child: Text('AboutPage'),
-            ),
-            DropdownButton<InfoModel?>(
-              isExpanded: true,
-              // Initial Value
-              value: value != null ? value : null,
+      body: isload == true
+          ? Center(child: const CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Center(
+                    child: Text('AboutPage'),
+                  ),
+                  DropdownButton<InfoModel?>(
+                    isExpanded: true,
+                    // Initial Value
+                    value: value ?? null,
 
-              // Down Arrow Icon
-              icon: const Icon(Icons.keyboard_arrow_down),
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
 
-              // Array list of items
-              items: infoData.when(
-                data: (data) {
-                  return data.map((InfoModel items) {
-                    return DropdownMenuItem<InfoModel>(
-                      value: items,
-                      child: Text(items.email.toString()),
-                    );
-                  }).toList();
-                },
-                error: (error, stackTrace) {},
-                loading: () {},
-              ),
+                    // Array list of items
+                    items: infoData.when(
+                      data: (data) {
+                        return data.map((InfoModel items) {
+                          return DropdownMenuItem<InfoModel>(
+                            value: items,
+                            child: Text(items.email.toString()),
+                          );
+                        }).toList();
+                      },
+                      error: (error, stackTrace) {},
+                      loading: () {},
+                    ),
 
-              onChanged: (newValue) {
-                ref.read(aboutValu.valueProvider.notifier).state = newValue!;
-                print('email =${newValue.email}');
-                print('body =${newValue.body}');
-                print('name =${newValue.name}');
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text('${value.toString()}'),
-            ListTile(
-              title: const Text('Mail'),
-              leading: Radio(
-                value: "mail",
-                groupValue: genderValue,
-                onChanged: (value) {
-                  ref.watch(aboutValu.genderProvider.notifier).state = value!;
-                  ref.read(homeController).toSum();
-                },
+                    onChanged: (newValue) {
+                      ref.read(aboutValu.valueProvider.notifier).state =
+                          newValue!;
+                      print('email =${newValue.email}');
+                      print('body =${newValue.body}');
+                      print('name =${newValue.name}');
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('${value?.name.toString()}'),
+                  ListTile(
+                    title: const Text('Mail'),
+                    leading: Radio(
+                      value: "mail",
+                      groupValue: genderValue,
+                      onChanged: (value) {
+                        ref.watch(aboutValu.genderProvider.notifier).state =
+                            value!;
+                        ref.read(homeController).toSum();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Femail'),
+                    leading: Radio(
+                      value: 'femail',
+                      groupValue: genderValue,
+                      onChanged: (value) {
+                        ref.watch(aboutValu.genderProvider.notifier).state =
+                            value!;
+                        ref.read(homeController).toSum();
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      const SizedBox(
+                        width: 10,
+                      ), //SizedBox
+                      const Text(
+                        'Library Implementation Of Searching Algorithm: ',
+                        style: TextStyle(fontSize: 17.0),
+                      ), //Text
+                      const SizedBox(width: 10), //SizedBox
+                      /** Checkbox Widget **/
+                      Checkbox(
+                        value: conditionValue,
+                        onChanged: (value) {
+                          ref.read(aboutValu.conditionProvider.notifier).state =
+                              value!;
+                        },
+                      ),
+                    ], //<Widget>[]
+                  ),
+                  const InfoDetails(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text('${ref.watch(dropdownProvider)}'),
+                  const CustomDropdownList(),
+                ],
               ),
             ),
-            ListTile(
-              title: const Text('Femail'),
-              leading: Radio(
-                value: 'femail',
-                groupValue: genderValue,
-                onChanged: (value) {
-                  ref.watch(aboutValu.genderProvider.notifier).state = value!;
-                  ref.read(homeController).toSum();
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: <Widget>[
-                const SizedBox(
-                  width: 10,
-                ), //SizedBox
-                const Text(
-                  'Library Implementation Of Searching Algorithm: ',
-                  style: TextStyle(fontSize: 17.0),
-                ), //Text
-                const SizedBox(width: 10), //SizedBox
-                /** Checkbox Widget **/
-                Checkbox(
-                  value: conditionValue,
-                  onChanged: (value) {
-                    ref.read(aboutValu.conditionProvider.notifier).state =
-                        value!;
-                  },
-                ),
-              ], //<Widget>[]
-            ),
-            const InfoDetails(),
-            const SizedBox(
-              height: 10,
-            ),
-            Text('${ref.watch(dropdownProvider)}'),
-            const CustomDropdownList(),
-          ],
-        ),
-      ),
     );
   }
 }
