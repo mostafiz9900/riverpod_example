@@ -4,8 +4,8 @@ import 'package:todo_riverpod/providers/info_provider.dart';
 import 'package:todo_riverpod/ui/about_page.dart';
 
 class AboutProvider {
-  final valueProvider = StateProvider.autoDispose<String>((ref) {
-    return 'Item 1';
+  final valueProvider = StateProvider.autoDispose<InfoModel?>((ref) {
+    return null;
   });
   final genderProvider = StateProvider<String>((ref) {
     return 'mail';
@@ -44,5 +44,20 @@ class MyStateNotifier extends StateNotifier<InfoModel> {
   void doSomething() {
     final value = ref.read(dropdownProvider);
     varLis.read(dropdownProvider);
+  }
+}
+
+final homeController = Provider<HomeController>((ref) {
+  return HomeController(ref: ref);
+});
+
+class HomeController {
+  ProviderRef ref;
+  HomeController({required this.ref});
+  void toSum() {
+    final about = ref.read(aboutProvider);
+    final gender = ref.read(about.genderProvider);
+    print(gender);
+    print('===========================');
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_riverpod/model/info.dart';
 import 'package:todo_riverpod/providers/about_provider.dart';
 import 'package:todo_riverpod/providers/info_provider.dart';
 
@@ -22,13 +23,8 @@ class AboutPage extends ConsumerWidget {
     final value = ref.watch(aboutValu.valueProvider);
     final genderValue = ref.watch(aboutValu.genderProvider);
     final conditionValue = ref.watch(aboutValu.conditionProvider);
-    var items = [
-      'Item 1',
-      'Item 2',
-      'Item 3',
-      'Item 4',
-      'Item 5',
-    ];
+    final infoData = ref.watch(infoProvider('55'));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('AboutPage'),
@@ -39,25 +35,33 @@ class AboutPage extends ConsumerWidget {
             const Center(
               child: Text('AboutPage'),
             ),
-            DropdownButton(
+            DropdownButton<InfoModel?>(
               isExpanded: true,
               // Initial Value
-              value: value,
+              value: value != null ? value : null,
 
               // Down Arrow Icon
               icon: const Icon(Icons.keyboard_arrow_down),
 
               // Array list of items
-              items: items.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
+              items: infoData.when(
+                data: (data) {
+                  return data.map((InfoModel items) {
+                    return DropdownMenuItem<InfoModel>(
+                      value: items,
+                      child: Text(items.email.toString()),
+                    );
+                  }).toList();
+                },
+                error: (error, stackTrace) {},
+                loading: () {},
+              ),
 
               onChanged: (newValue) {
                 ref.read(aboutValu.valueProvider.notifier).state = newValue!;
-                print(newValue);
+                print('email =${newValue.email}');
+                print('body =${newValue.body}');
+                print('name =${newValue.name}');
               },
             ),
             const SizedBox(
@@ -71,6 +75,7 @@ class AboutPage extends ConsumerWidget {
                 groupValue: genderValue,
                 onChanged: (value) {
                   ref.watch(aboutValu.genderProvider.notifier).state = value!;
+                  ref.read(homeController).toSum();
                 },
               ),
             ),
@@ -81,6 +86,7 @@ class AboutPage extends ConsumerWidget {
                 groupValue: genderValue,
                 onChanged: (value) {
                   ref.watch(aboutValu.genderProvider.notifier).state = value!;
+                  ref.read(homeController).toSum();
                 },
               ),
             ),
