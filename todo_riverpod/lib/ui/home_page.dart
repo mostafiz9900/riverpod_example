@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_riverpod/ui/screen/home_screen.dart';
 
+import '../providers/about_provider.dart';
+import '../providers/info_provider.dart';
+
 final navProvider = StateProvider<int>((ref) {
   return 0;
 });
@@ -11,7 +14,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navValue = ref.watch(navProvider);
-
+    final infoData = ref.watch(infoProvider('55'));
     return Scaffold(
       appBar: AppBar(
         title: const Text('HomePage'),

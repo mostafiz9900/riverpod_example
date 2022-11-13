@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:todo_riverpod/model/info.dart';
 import 'package:todo_riverpod/providers/about_provider.dart';
 import 'package:todo_riverpod/providers/info_provider.dart';
@@ -44,102 +45,118 @@ class AboutPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('AboutPage'),
       ),
-      body: isload == true
-          ? Center(child: const CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Center(
-                    child: Text('AboutPage'),
-                  ),
-                  DropdownButton<InfoModel?>(
-                    isExpanded: true,
-                    // Initial Value
-                    value: value ?? null,
+      body:
+          // isload == true
+          //     ? Center(
 
-                    // Down Arrow Icon
-                    icon: const Icon(Icons.keyboard_arrow_down),
+          //     :
+          SingleChildScrollView(
+        child: Column(
+          children: [
+            const Center(
+              child: Text('AboutPage'),
+            ),
+            Builder(builder: (context) {
+              return infoData.when(
+                  data: (data) {
+                    return DropdownButton<InfoModel?>(
+                      isExpanded: true,
+                      // Initial Value
+                      value: value ?? null,
 
-                    // Array list of items
-                    items: infoData.when(
-                      data: (data) {
-                        return data.map((InfoModel items) {
-                          return DropdownMenuItem<InfoModel>(
-                            value: items,
-                            child: Text(items.email.toString()),
-                          );
-                        }).toList();
-                      },
-                      error: (error, stackTrace) {},
-                      loading: () {},
-                    ),
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
 
-                    onChanged: (newValue) {
-                      ref.read(aboutValu.valueProvider.notifier).state =
-                          newValue!;
-                      print('email =${newValue.email}');
-                      print('body =${newValue.body}');
-                      print('name =${newValue.name}');
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text('${value?.name.toString()}'),
-                  ListTile(
-                    title: const Text('Mail'),
-                    leading: Radio(
-                      value: "mail",
-                      groupValue: genderValue,
-                      onChanged: (value) {
-                        ref.watch(aboutValu.genderProvider.notifier).state =
-                            value!;
-                        ref.read(homeController).toSum();
+                      // Array list of items
+                      items: data.map((InfoModel items) {
+                        return DropdownMenuItem<InfoModel>(
+                          value: items,
+                          child: Text(items.email.toString()),
+                        );
+                      }).toList(),
+
+                      onChanged: (newValue) {
+                        ref.read(aboutValu.valueProvider.notifier).state =
+                            newValue!;
+                        print('email =${newValue.email}');
+                        print('body =${newValue.body}');
+                        print('name =${newValue.name}');
                       },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Femail'),
-                    leading: Radio(
-                      value: 'femail',
-                      groupValue: genderValue,
-                      onChanged: (value) {
-                        ref.watch(aboutValu.genderProvider.notifier).state =
-                            value!;
-                        ref.read(homeController).toSum();
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: <Widget>[
-                      const SizedBox(
-                        width: 10,
-                      ), //SizedBox
-                      const Text(
-                        'Library Implementation Of Searching Algorithm: ',
-                        style: TextStyle(fontSize: 17.0),
-                      ), //Text
-                      const SizedBox(width: 10), //SizedBox
-                      /** Checkbox Widget **/
-                      Checkbox(
-                        value: conditionValue,
-                        onChanged: (value) {
-                          ref.read(aboutValu.conditionProvider.notifier).state =
-                              value!;
-                        },
-                      ),
-                    ], //<Widget>[]
-                  ),
-                  const InfoDetails(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text('${ref.watch(dropdownProvider)}'),
-                  const CustomDropdownList(),
-                ],
+                    );
+                  },
+                  error: (error, stackTrace) => Text(error.toString()),
+                  loading: () => SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.96,
+                        height: 30.0,
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade400,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            color: Colors.grey.shade200,
+                            child: DropdownButton(
+                              items: [],
+                              onChanged: (value) {},
+                            ),
+                          ),
+                        ),
+                      ));
+            }),
+            const SizedBox(
+              height: 20,
+            ),
+            Text('${value?.name.toString()}'),
+            ListTile(
+              title: const Text('Mail'),
+              leading: Radio(
+                value: "mail",
+                groupValue: genderValue,
+                onChanged: (value) {
+                  ref.watch(aboutValu.genderProvider.notifier).state = value!;
+                  ref.read(homeController).toSum();
+                },
               ),
             ),
+            ListTile(
+              title: const Text('Femail'),
+              leading: Radio(
+                value: 'femail',
+                groupValue: genderValue,
+                onChanged: (value) {
+                  ref.watch(aboutValu.genderProvider.notifier).state = value!;
+                  ref.read(homeController).toSum();
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                const SizedBox(
+                  width: 10,
+                ), //SizedBox
+                const Text(
+                  'Library Implementation Of Searching Algorithm: ',
+                  style: TextStyle(fontSize: 17.0),
+                ), //Text
+                const SizedBox(width: 10), //SizedBox
+                /** Checkbox Widget **/
+                Checkbox(
+                  value: conditionValue,
+                  onChanged: (value) {
+                    ref.read(aboutValu.conditionProvider.notifier).state =
+                        value!;
+                  },
+                ),
+              ], //<Widget>[]
+            ),
+            const InfoDetails(),
+            const SizedBox(
+              height: 10,
+            ),
+            Text('${ref.watch(dropdownProvider)}'),
+            const CustomDropdownList(),
+          ],
+        ),
+      ),
     );
   }
 }
