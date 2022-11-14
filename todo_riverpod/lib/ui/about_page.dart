@@ -5,6 +5,8 @@ import 'package:todo_riverpod/model/info.dart';
 import 'package:todo_riverpod/providers/about_provider.dart';
 import 'package:todo_riverpod/providers/info_provider.dart';
 
+import '../main.dart';
+
 final isLoaderProvider = StateProvider.autoDispose<bool>((ref) {
   return true;
 });
@@ -23,6 +25,7 @@ class AboutPage extends ConsumerWidget {
   const AboutPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dateFormate = ref.watch(dateFormatterProvider);
     final aboutValu = ref.watch(aboutProvider);
     print('object1');
     final value = ref.watch(aboutValu.valueProvider);
@@ -56,6 +59,7 @@ class AboutPage extends ConsumerWidget {
             const Center(
               child: Text('AboutPage'),
             ),
+            Text(dateFormate.format(DateTime.now())),
             Builder(builder: (context) {
               return infoData.when(
                   data: (data) {

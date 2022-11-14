@@ -14,7 +14,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navValue = ref.watch(navProvider);
-    final infoData = ref.watch(infoProvider('55'));
+    // final infoData = ref.watch(infoProvider('55'));
     return Scaffold(
       appBar: AppBar(
         title: const Text('HomePage'),
