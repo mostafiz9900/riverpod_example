@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../controllers/home_controller.dart';
+
 final valueProvider = StateProvider<int>((ref) {
   return 28;
 });
@@ -17,6 +19,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var value = ref.watch(valueProvider);
+    var homeCon = ref.watch(homeControllerProvider);
     final dropDownValue = ref.watch(selectDropdownProvider);
     ref.listen(valueProvider, ((previous, next) {
       if (next == 40) {
@@ -43,6 +46,7 @@ class HomeScreen extends ConsumerWidget {
           ElevatedButton(
               onPressed: () {
                 ref.read(valueProvider.notifier).state++;
+                homeCon.counter(ref.read(valueProvider));
               },
               child: const Text('Increment')),
           const SizedBox(
