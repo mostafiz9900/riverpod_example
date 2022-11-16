@@ -3,8 +3,10 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../controllers/home_controller.dart';
+import '../../providers/clock_provider.dart';
 
 final valueProvider = StateProvider<int>((ref) {
   return 28;
@@ -18,6 +20,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentTime = ref.watch(clockProvider);
+    final timeFormatted = DateFormat.Hms().format(currentTime);
     var value = ref.watch(valueProvider);
     var homeCon = ref.watch(homeControllerProvider);
     final dropDownValue = ref.watch(selectDropdownProvider);
@@ -43,6 +47,7 @@ class HomeScreen extends ConsumerWidget {
           Center(
             child: Text(value.toString()),
           ),
+          Text(timeFormatted),
           ElevatedButton(
               onPressed: () {
                 ref.read(valueProvider.notifier).state++;
