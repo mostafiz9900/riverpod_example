@@ -1,6 +1,7 @@
 import 'package:clean_arch/src/domain/entities/student.dart';
 import 'package:clean_arch/src/domain/entities/teacher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
 
 import '../../../../main.dart';
 
@@ -15,29 +16,26 @@ class HomeController {
   Ref ref;
   void _init() async {
     // await addStudent();
-    // await getStudent();
+    await getStudent();
     print('home controller init ');
   }
 
   Future<void> addStudent() async {
-    final teacherAdd = Teacher()
-      ..id = 1
-      ..subject = 'Fluter';
+    final teacherAdd = Teacher()..subject = 'Fluter';
     final studentAdd = Student()
-      ..id = 1
-      ..name = 'Mostafizur';
-    await isar.writeTxn(() async {
-      await isar.teachers.put(teacherAdd); // insert & update
-    });
+      ..name = 'Mostafizur Rahman'
+      ..teacher.value = teacherAdd;
+
     await isar.writeTxn(() async {
       await isar.students.put(studentAdd); // insert & update
+      await isar.teachers.put(teacherAdd);
+      await studentAdd.teacher.save();
     });
   }
 
   Future<List<Student?>> getStudent() async {
-    final allStudent = await isar.students.getAll([
-      1,
-    ]);
+    final data = isar.students;
+    final allStudent = await data.where().findAll();
     return allStudent;
   }
 }

@@ -3,7 +3,7 @@ part "teacher.g.dart";
 
 @collection
 class Teacher {
-  Id? id;
+  Id? id = Isar.autoIncrement;
 
   late String subject;
 }

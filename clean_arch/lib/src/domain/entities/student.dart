@@ -4,7 +4,7 @@ part 'student.g.dart';
 
 @collection
 class Student {
-  Id? id;
+  Id? id = Isar.autoIncrement;
 
   late String name;
 
