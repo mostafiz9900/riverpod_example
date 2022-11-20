@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../main.dart';
+import '../views/home_view.dart';
 
 final homeConProvider = Provider<HomeController>((ref) {
   return HomeController(ref: ref);
@@ -20,10 +21,10 @@ class HomeController {
     print('home controller init ');
   }
 
-  Future<void> addStudent() async {
-    final teacherAdd = Teacher()..subject = 'Fluter';
+  Future<void> addStudent(String studentName, String subject) async {
+    final teacherAdd = Teacher()..subject = subject;
     final studentAdd = Student()
-      ..name = 'Mostafizur Rahman'
+      ..name = studentName
       ..teacher.value = teacherAdd;
 
     await isar.writeTxn(() async {
@@ -37,5 +38,14 @@ class HomeController {
     final data = isar.students;
     final allStudent = await data.where().findAll();
     return allStudent;
+  }
+
+  void deleteTodo(int id) async {
+    await isar.writeTxn(() async {
+      bool deleted = await isar.students.delete(id);
+      // await getStudent();
+      ref.refresh(studentProvider);
+      // await ref.read(studentProvider.future);
+    });
   }
 }
