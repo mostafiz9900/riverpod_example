@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-List<UserEntity> userEntityFromJson(dynamic str) => List<UserEntity>.from(
-    (str as List<dynamic>).map((x) => UserEntity.fromJson(x)));
+List<UserEntity> userEntityFromJson(String str) =>
+    List<UserEntity>.from(json.decode(str).map((x) => UserEntity.fromJson(x)));
 
 String userEntityToJson(List<UserEntity> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
