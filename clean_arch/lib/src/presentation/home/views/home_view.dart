@@ -1,5 +1,6 @@
 import 'package:clean_arch/src/domain/entities/student.dart';
 import 'package:clean_arch/src/presentation/about/views/about_view.dart';
+import 'package:clean_arch/src/presentation/block/views/block_view.dart';
 import 'package:clean_arch/src/presentation/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +22,11 @@ class HomeView extends ConsumerWidget {
           IconButton(
               onPressed: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => AboutView())),
-              icon: Icon(Icons.abc_outlined))
+              icon: Icon(Icons.abc_outlined)),
+          IconButton(
+              onPressed: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => BlockView())),
+              icon: Icon(Icons.block))
         ],
       ),
       body: sut.when(
