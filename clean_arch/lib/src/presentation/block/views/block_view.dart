@@ -46,7 +46,22 @@ class BlockView extends ConsumerWidget {
             : Column(
                 children: [
                   SizedBox(
-                    height: 300,
+                    height: 200,
+                    child: users.when(
+                      data: (userInfo) {
+                        return ListWheelScrollView(
+                          itemExtent: 30,
+                          children: userInfo
+                              .map((e) => ListTile(title: Text(e.name ?? '')))
+                              .toList(),
+                        );
+                      },
+                      error: (error, stackTrace) => Text(error.toString()),
+                      loading: () => Text(''),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 100,
                     child: users.when(
                       data: (data) {
                         return ListView.builder(
